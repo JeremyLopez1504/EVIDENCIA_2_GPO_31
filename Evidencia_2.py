@@ -7,8 +7,8 @@ class Servicios:
     Folio=0
     Fecha=datetime
     Monto=0
-    Servicio=" "
-    Acumulado=0
+    Servicio=""
+    Acumulado=float
     # Genero el método constructor
     def _init_(self, folio, fecha, monto, servicio, acumulado) -> None:
         self.Folio=folio
@@ -35,34 +35,24 @@ with open("Servicios.csv") as archivo_csv:
 def Registrar_servicio():
     global Serv
     while True:
-        folio=input("\nDame la matrícula a buscar:")
-        if folio.keys():
-            nueva_clave= max(folio.keys())+1
-        else:
-            nueva_clave=1
-            folio[nueva_clave]=Serv
+        folio=input("\nDame el folio a buscar:")
         if (folio==""):
-            # Si se omite la matrícula, se sale a menú
+            # Si se omite el folio, se sale a menú
             break
         else:
-            # Si el parograma llega a esta línea, quiere decir que matrícula no se omitió, 
+            # Si el parograma llega a esta línea, quiere decir que el folio no se omitió, 
             # entonces revisa si ya existe el registro.
             indice=BuscarFolio(folio)
             if (indice!=-1):
-                # Si indice no es -1 quiere decir que la matrícula ya existe, y manda
-                # el mensaje de que el alta ya no se puede ejecutar.
-                print("\nEsa matrícula ya existe. Intente otra.")
+                print("\nEse folio ya existe. Intente otra.")
                 continue
             else:
-                # Si el programa llega a esta línea, quiere decir que matrícula no existe,
-                # y se puede dar de alta.
-                # Se preguntan los datos faltantes.
                 fecha=input("Dame una fecha DD/MM/AAAA: ")
                 servicio=input("Tipo de servicio: ")
                 monto=input("Monto a pagar: ")
-                acumulado=input((monto)*0.16)
-                # Crear una instancia de Alumno, con los datos
-                temporal=Servicios(fecha, servicio, monto, acumulado)
+                _acumulado = (0.16)
+                acumulado = (monto * _acumulado)
+                temporal=Servicios(folio, fecha, monto, servicio, acumulado)
                 # La agrego a la colección.
                 Serv.append(temporal)
                 break
@@ -71,20 +61,29 @@ def BuscarFolio(_folio):
     global Serv
     contador=-1
     indice=-1
-    # Busca si existe un elemento con esa matrícula
+    # Busca si existe un elemento con ese folio
     for var in Serv:
         contador=contador+1
-        if (var.Matricula==_folio):
+        if (var.Folio==_folio):
+            indice=contador
+            break
+    return indice
+
+def BuscarFecha(_fecha):
+    global Serv
+    contador=-1
+    indice=-1
+    # Busca si existe un elemento con esa fecha
+    for var in Serv:
+        contador=contador+1
+        if (var.Fecha==_fecha):
             indice=contador
             break
     return indice
 
 def BuscarServicio():
     global Serv
-    # Pregunta una matrícula. Si existe el alumno, lo muestra usando el
-    # método mostrar info, o de lo contrario, reporta "No encontrado".
-    # Si se omite el dato, no hace nada.
-    folio=input("\nDame la matrícula a buscar: ")
+    folio=input("\nDame el folio a buscar: ")
     if (not folio==""):
         indice=BuscarFolio(folio)
         if (indice==-1):
@@ -93,6 +92,17 @@ def BuscarServicio():
             print(" ")
             Serv[indice].MostrarInfo()
 
+
+def BuscarServicioFecha():
+    global Serv
+    fecha=input("\nDame la fecha a buscar: ")
+    if (not fecha==""):
+        indice=BuscarFolio(fecha)
+        if (indice==-1):
+            print("\nNo se encontraron coincidencias")
+        else:
+            print(" ")
+            Serv[indice].MostrarInfo()
 
 
 while True:
@@ -112,4 +122,4 @@ while True:
     if (opcion=="c"):
         BuscarServicio()
     if (opcion=="s"):
-        ()
+        BuscarServicioFecha()
